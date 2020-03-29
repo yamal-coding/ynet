@@ -23,11 +23,10 @@ implementation 'com.github.yamal-coding:ynet:0.0.1'
 
 ## Dependencies
 
-In order to use this lib, you will need to include Gson and OkHttp3 in your project.
+In order to use this lib, you will need to include Gson in your project.
 
-```{gradle}
-implementation 'com.google.code.gson::gson:2.8.5
-implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+```
+implementation 'com.google.code.gson:gson:2.8.5
 ```
 
 ## Example
