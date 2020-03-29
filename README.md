@@ -15,7 +15,7 @@ allprojects {
 Then add this dependency in your module
 
 ```
-implementation 'com.github.yamal-alm:ynet:1.0.0'
+implementation 'com.github.yamal-coding:ynet:1.0.0'
 ```
 
 ## Dependencies
