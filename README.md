@@ -1,4 +1,7 @@
 # ynet
+
+[![](https://jitpack.io/v/yamal-coding/ynet.svg)](https://jitpack.io/#yamal-coding/ynet/0.0.1)
+
 Small and straightforward lib built over OkHttp3 to make network calls.
 
 To include this lib in your project add Jitpack as a dependency repository in your root build.gradle file.
@@ -12,10 +15,10 @@ allprojects {
     }
 }
 ```
-Then add this dependency in your module
+Then add this dependency in your module:
 
 ```
-implementation 'com.github.yamal-coding:ynet:1.0.0'
+implementation 'com.github.yamal-coding:ynet:0.0.1'
 ```
 
 ## Dependencies
