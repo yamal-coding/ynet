@@ -26,7 +26,7 @@ implementation 'com.github.yamal-coding:ynet:0.0.1'
 In order to use this lib, you will need to include Gson in your project.
 
 ```
-implementation 'com.google.code.gson:gson:2.8.5
+implementation 'com.google.code.gson:gson:2.8.5'
 ```
 
 ## Example
