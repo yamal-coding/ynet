@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion sdk_version
+    buildToolsVersion "29.0.0"
+
+    defaultConfig {
+        minSdkVersion min_api_level
+        targetSdkVersion sdk_version
+        versionCode 1
+        versionName '1.0.0'
+
+    }
+}
+
+dependencies {
+    implementation libs.kotlin_stdlib
+
+    implementation libs.gson
+    implementation libs.okhttp3
+
+    testImplementation libs.junit
+}
