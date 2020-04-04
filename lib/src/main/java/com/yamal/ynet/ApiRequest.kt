@@ -1,16 +1,15 @@
 package com.yamal.ynet
 
-interface ApiRequest<ResponseType> {
+sealed class ApiRequest<ResponseType> {
+    abstract fun getPathSegments(): String
 
-    fun getMethod(): HttpMethod
+    abstract fun getResponseClass(): Class<ResponseType>
 
-    fun getPathSegments(): String
-
-    fun getResponseClass(): Class<ResponseType>
-
-    fun getQueryParams(): Map<String, String> = emptyMap()
+    open fun getQueryParams(): Map<String, String> = emptyMap()
 }
 
-enum class HttpMethod {
-    GET
+abstract class ApiRequestGet<ResponseType> : ApiRequest<ResponseType>()
+
+abstract class ApiRequestPost<RequestBodyType, ResponseType> : ApiRequest<ResponseType>() {
+    abstract fun getBody(): RequestBodyType
 }

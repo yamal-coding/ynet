@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
+
+def groupId = 'com.yamal'
+def artifactId = 'ynet'
 
 android {
     compileSdkVersion sdk_version
@@ -21,4 +25,18 @@ dependencies {
     implementation libs.okhttp3
 
     testImplementation libs.junit
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            library(MavenPublication) {
+                setGroupId groupId
+                setArtifactId artifactId
+                version android.defaultConfig.versionName
+
+                artifact bundleReleaseAar
+            }
+        }
+    }
 }

@@ -1,18 +1,34 @@
 package com.yamal.ynet
 
 import com.google.gson.Gson
-import okhttp3.*
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.net.URI
 
 class ApiClient(
     baseUrl: String,
     private val gson: Gson,
-    private val logger: ApiLogger?
+    private val headersInterceptor: HeadersInterceptor? = null,
+    private val logger: ApiLogger? = null
 ) {
-    private val mBaseUrl = URI.create(baseUrl)
+    private val mBaseUrl: HttpUrl
     private val okHttpClient = OkHttpClient.Builder().build()
     private var urlInterceptor: UrlInterceptor? = null
+
+    init {
+        val urlBuilder = HttpUrl.Builder()
+
+        with(URI.create(baseUrl)) {
+            host?.let { urlBuilder.host(it) }
+            port.takeIf { it >= 0 }?.let { urlBuilder.port(it) }
+            scheme?.let { urlBuilder.scheme(it) }
+        }
+
+        mBaseUrl = urlBuilder.build()
+    }
 
     fun setUrlInterceptor(urlInterceptor: UrlInterceptor?) {
         this.urlInterceptor = urlInterceptor
@@ -25,9 +41,9 @@ class ApiClient(
     ) {
         val requestBuilder = Request.Builder().url(createUrl(apiRequest))
 
-        when (apiRequest.getMethod()) {
-            HttpMethod.GET -> requestBuilder.get()
-        }
+        requestBuilder
+            .selectMethod(apiRequest)
+            .addHeaders()
 
         try {
             val request = requestBuilder.build()
@@ -56,12 +72,26 @@ class ApiClient(
         }
     }
 
-    private fun createUrl(apiRequest: ApiRequest<*>): HttpUrl {
-        val urlBuilder = HttpUrl.Builder()
+    private fun  Request.Builder.selectMethod(apiRequest: ApiRequest<*>) = apply {
+        when (apiRequest) {
+            is ApiRequestGet -> get()
+            is ApiRequestPost<*, *> -> {
+                val requestBodyAsJson = gson.toJson(apiRequest.getBody())
+                logger?.logRequest("Body $requestBodyAsJson")
+                post(requestBodyAsJson.toRequestBody())
+            }
+        }
+    }
 
-        mBaseUrl.host?.let { urlBuilder.host(it) }
-        mBaseUrl.port.takeIf { it >= 0 }?.let { urlBuilder.port(it) }
-        mBaseUrl.scheme?.let { urlBuilder.scheme(it) }
+    private fun Request.Builder.addHeaders() = apply {
+        headersInterceptor?.getHeaders()?.forEach {
+            addHeader(it.key, it.value)
+        }
+    }
+
+    private fun createUrl(apiRequest: ApiRequest<*>): HttpUrl {
+        val urlBuilder = mBaseUrl.newBuilder()
+
         apiRequest.getQueryParams().forEach {
             urlBuilder.addQueryParameter(it.key, it.value)
         }
