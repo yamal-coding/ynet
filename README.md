@@ -36,11 +36,9 @@ First declare the type of your request and response. In the request declaration 
 **Note:** Body will be added in future version of the lib along with the rest of Http methods.
 
 ```kotlin
-class MyRequest : ApiRequest<MyResponse> {
+class MyRequest : ApiRequestGet<MyResponse> {
   
   override fun getResponseClass(): Class<MyResponse> = MyResponse::class.java
-  
-  override fun getMethod(): HttpMethod = HttpMethod.GET
   
   override fun getPathSegments(): String = "resources/items"
   
